@@ -25,7 +25,7 @@ mod tests {
             .with_authorization_keys(&[account_addr])
             .build();
         context.run(deploysession);
-        println!("Deployed");
+        println!("Deployed.");
 
         // Add count
         let hash: Hash = context
@@ -39,6 +39,7 @@ mod tests {
             .with_authorization_keys(&[account_addr])
             .build();
         context.run(addsession);
+        println!("1 added.");
 
         // Query count
         let n: i32 = context
@@ -46,9 +47,28 @@ mod tests {
             .unwrap()
             .into_t()
             .unwrap();
-        println!("added");
+        assert_eq!(1, n);
+        println!("n now: {}", n);
 
-        println!("n:{}", n);
+
+        // Add 1 again
+        let code = Code::Hash(hash, "count_one".to_string());
+        let addsession = SessionBuilder::new(code, runtime_args! {})
+            .with_address(account_addr)
+            .with_authorization_keys(&[account_addr])
+            .build();
+        context.run(addsession);
+        println!("1 added.");
+
+        // Validate
+        let n: i32 = context
+            .query(account_addr, &["count".into()])
+            .unwrap()
+            .into_t()
+            .unwrap();
+
+        assert_eq!(2, n);
+        println!("n now: {}", n);
     }
 }
 

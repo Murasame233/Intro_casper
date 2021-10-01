@@ -4,7 +4,7 @@ A intro to Casper smartcontract dev.
 
 # What it can do
 
-Just a counter, start from 5.
+Just a counter, start from 0.
 
 # Run
 

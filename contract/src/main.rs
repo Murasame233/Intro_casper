@@ -32,7 +32,7 @@ pub extern "C" fn count_one() {
 
 #[no_mangle]
 pub extern "C" fn call() {
-    let vref = storage::new_uref(5);
+    let vref = storage::new_uref(0);
     let key = Key::URef(vref);
     runtime::put_key(KEY_NAME, key);
     let (contract_package_hash, _) = storage::create_contract_package_at_hash();
@@ -46,11 +46,6 @@ pub extern "C" fn call() {
     ));
 
     let mut keys = NamedKeys::new();
-    let uref: URef = runtime::get_key(KEY_NAME)
-        .unwrap_or_revert_with(ApiError::MissingKey)
-        .into_uref()
-        .unwrap_or_revert_with(ApiError::UnexpectedKeyVariant);
-    let key = Key::URef(uref);
     keys.insert(KEY_NAME.into(), key);
     let (contract_hash, _) =
         storage::add_contract_version(contract_package_hash, entrypoints, keys);
