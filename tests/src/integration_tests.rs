@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use casper_engine_test_support::{Hash,Code,SessionBuilder, TestContextBuilder};
+    use casper_engine_test_support::{Code, Hash, SessionBuilder, TestContextBuilder};
     use casper_types::{
         account::AccountHash, runtime_args, PublicKey, RuntimeArgs, SecretKey, U512,
     };
@@ -28,18 +28,28 @@ mod tests {
         println!("Deployed");
 
         // Add count
-        let hash:Hash = context.query(account_addr, &[String::from("counter_contract_hash")]).unwrap().into_t().unwrap();
-        let code = Code::Hash(hash,"count_one".to_string());
-        let addsession = SessionBuilder::new(code,runtime_args! {})
-        .with_address(account_addr).with_authorization_keys(&[account_addr]).build();
+        let hash: Hash = context
+            .query(account_addr, &[String::from("counter_contract_hash")])
+            .unwrap()
+            .into_t()
+            .unwrap();
+        let code = Code::Hash(hash, "count_one".to_string());
+        let addsession = SessionBuilder::new(code, runtime_args! {})
+            .with_address(account_addr)
+            .with_authorization_keys(&[account_addr])
+            .build();
         context.run(addsession);
+
+        // Query count
+        let n: i32 = context
+            .query(account_addr, &["count".into()])
+            .unwrap()
+            .into_t()
+            .unwrap();
         println!("added");
 
-        // !uery result
-        let n:i32  = context.query(account_addr, &["count".into()]).unwrap().into_t().unwrap();
-        println!("n:{}",n);
+        println!("n:{}", n);
     }
-
 }
 
 fn main() {
