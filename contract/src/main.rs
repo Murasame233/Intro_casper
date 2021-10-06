@@ -16,7 +16,7 @@ use casper_contract::{
 };
 use casper_types::{
     contracts::NamedKeys, ApiError, CLType, EntryPoint, EntryPointAccess, EntryPointType,
-    EntryPoints, Key, URef,
+    EntryPoints, Key, RuntimeArgs, URef,
 };
 
 const KEY_NAME: &str = "count";
@@ -51,5 +51,8 @@ pub extern "C" fn call() {
         storage::add_contract_version(contract_package_hash, entrypoints, keys);
     runtime::put_key("counter_contract", contract_hash.into());
     let contract_hash_pack = storage::new_uref(contract_hash);
-    runtime::put_key("counter_contract_hash", contract_hash_pack.into())
+    runtime::put_key("counter_contract_hash", contract_hash_pack.into());
+
+    // Use this to call contract
+    runtime::call_contract::<()>(contract_hash, "count_one", RuntimeArgs::new());
 }
